@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#426b52">
+<title>Joe & Jenny's Global Mediterranean Kitchen — Week 1</title>
+<style>
+:root{
+  --ink:#243128; --muted:#66736a; --green:#426b52; --green2:#e8f0ea;
+  --cream:#fbfaf6; --card:#fff; --line:#dfe5df; --gold:#b07b32;
+  --shadow:0 4px 18px rgba(30,45,35,.08); --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+a{color:var(--green);text-decoration:none}
+.container{max-width:1120px;margin:auto;padding:0 18px}
+header{background:linear-gradient(135deg,#355d45,#52795e);color:white;padding:34px 0 28px}
+.eyebrow{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.08;margin:.35rem 0 .7rem}
+.subtitle{font-size:1.05rem;max-width:720px;opacity:.92}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:6px 10px;border-radius:999px;font-size:.85rem}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navscroll{display:flex;gap:6px;overflow-x:auto;padding:9px 0}
+.navscroll a{white-space:nowrap;padding:8px 12px;border-radius:999px;font-size:.9rem}
+.navscroll a:hover{background:var(--green2)}
+main{padding:24px 0 60px}
+section{scroll-margin-top:70px;margin:30px 0}
+h2{font-size:1.7rem;margin:0 0 12px}
+h3{margin:.2rem 0 .5rem;font-size:1.15rem}
+.lead{color:var(--muted);max-width:800px}
+.grid{display:grid;gap:16px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.callout{border-left:5px solid var(--green);background:var(--green2);padding:16px 18px;border-radius:10px}
+table{width:100%;border-collapse:collapse;background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line)}
+th{background:#eef3ee;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+tr:last-child td{border-bottom:0}
+.day{font-weight:700;white-space:nowrap}
+.mealtype{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.checklist{display:grid;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;background:#fafcfa}
+.check:hover{background:#f1f6f2}
+.check input{width:21px;height:21px;accent-color:var(--green);margin-top:2px;flex:0 0 auto}
+.check.done span{text-decoration:line-through;color:#89948c}
+.qty{font-weight:600}
+.used{color:var(--muted);font-size:.86rem}
+.recipe{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);margin:14px 0;overflow:hidden}
+.recipe summary{cursor:pointer;padding:18px 20px;font-weight:700;font-size:1.15rem;list-style:none}
+.recipe summary::-webkit-details-marker{display:none}
+.recipe summary:before{content:"＋";display:inline-block;margin-right:9px;color:var(--green);font-weight:500}
+.recipe[open] summary:before{content:"−"}
+.recipebody{padding:0 20px 22px}
+.meta{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 15px}
+.pill{background:#f0f4f0;color:#4d6253;border-radius:999px;padding:5px 9px;font-size:.8rem}
+.recipegrid{display:grid;grid-template-columns:1fr 1.35fr;gap:22px}
+ul,ol{padding-left:1.25rem}
+li{margin:.3rem 0}
+.small{font-size:.88rem;color:var(--muted)}
+.rating{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rating label{border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:.82rem}
+.rating input{margin-right:5px}
+.progressbox{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+progress{width:220px;height:14px;accent-color:var(--green)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.85rem}
+button{border:1px solid var(--line);background:white;border-radius:10px;padding:9px 12px;cursor:pointer}
+button:hover{background:#f1f5f1}
+.print{float:right}
+@media(max-width:760px){
+  .container{padding:0 13px}
+  header{padding:27px 0 23px}
+  .grid2,.grid3,.recipegrid{grid-template-columns:1fr}
+  table,thead,tbody,tr,th,td{display:block}
+  thead{display:none}
+  tr{padding:12px 0;border-bottom:1px solid var(--line)}
+  td{border:0;padding:4px 12px}
+  td:before{content:attr(data-label);display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .day{padding-top:10px}
+  .print{float:none}
+}
+@media print{
+  nav,.print,button{display:none!important}
+  body{background:white;font-size:10.5pt}
+  header{background:white;color:#000;border-bottom:2px solid #444}
+  .card,.recipe,table{box-shadow:none}
+  .recipe{break-inside:avoid}
+  .recipe[open] summary{border-bottom:1px solid #ddd}
+  .recipebody{display:block!important}
+  section{margin:22px 0}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="container">
+<div class="eyebrow">Joe & Jenny's Global Mediterranean Kitchen</div>
+<h1>Week 1</h1>
+<div class="subtitle">Mediterranean nutrition as the foundation. Global flavors for variety. One practical grocery cart, one Sunday prep session, and meals that are actually cookable.</div>
+<div class="badges">
+<span class="badge">2 people</span><span class="badge">~$100 target</span><span class="badge">Sunday prep: ~90–120 min</span><span class="badge">Mobile friendly</span>
+</div>
+</div>
+</header>
+
+<nav><div class="container navscroll">
+<a href="#week">This Week</a><a href="#grocery">Grocery List</a><a href="#prep">Sunday Prep</a><a href="#recipes">Recipes</a><a href="#leftovers">Leftovers</a><a href="#notes">Ratings</a>
+</div></nav>
+
+<main class="container">
+<section id="intro">
+<div class="callout">
+<strong>The house rules:</strong> Mediterranean-style eating stays at the center—vegetables, fruit, beans/lentils, whole grains, olive oil, fish, nuts/seeds, and moderate poultry/eggs/dairy. The variety comes from Greek, Indian, Mexican, Italian, Thai, Japanese, and Moroccan-inspired flavors. We reuse ingredients aggressively enough to keep the grocery cart sane.
+</div>
+</section>
+
+<section id="week">
+<h2>The Week at a Glance</h2>
+<p class="lead">Lunches intentionally use leftovers. Breakfasts and snacks are simple assemblies. Dinners are the recipes worth cooking.</p>
+<div class="card" style="margin-bottom:16px">
+<div class="progressbox"><strong>Grocery progress</strong><progress id="groceryProgress" value="0" max="1"></progress><span id="progressText">0%</span><button onclick="clearChecks()">Clear grocery checks</button></div>
+</div>
+<table>
+<thead><tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th><th>Snack</th></tr></thead>
+<tbody>
+<tr><td class="day" data-label="Day">Sunday</td><td data-label="Breakfast">Banana-walnut oatmeal</td><td data-label="Lunch">Mediterranean chickpea bowls</td><td data-label="Dinner">Lemon-oregano chicken, potatoes & vegetables</td><td data-label="Snack">Apple + peanut butter</td></tr>
+<tr><td class="day" data-label="Day">Monday</td><td data-label="Breakfast">Greek yogurt + oats + banana + walnuts</td><td data-label="Lunch">Chicken grain bowl</td><td data-label="Dinner">Red lentil & spinach dal + brown rice</td><td data-label="Snack">Cucumber/carrot + hummus</td></tr>
+<tr><td class="day" data-label="Day">Tuesday</td><td data-label="Breakfast">Eggs + spinach toast</td><td data-label="Lunch">Leftover lentil dal</td><td data-label="Dinner">Chicken & black bean fajita bowls</td><td data-label="Snack">Greek yogurt + fruit</td></tr>
+<tr><td class="day" data-label="Day">Wednesday</td><td data-label="Breakfast">Apple-cinnamon overnight oats</td><td data-label="Lunch">Leftover fajita bowl</td><td data-label="Dinner">Tuna, white bean & spinach pasta</td><td data-label="Snack">Apple + peanut butter</td></tr>
+<tr><td class="day" data-label="Day">Thursday</td><td data-label="Breakfast">Greek yogurt + banana + oats</td><td data-label="Lunch">Leftover tuna pasta</td><td data-label="Dinner">Thai-inspired chickpea vegetable curry + rice</td><td data-label="Snack">Carrots + hummus</td></tr>
+<tr><td class="day" data-label="Day">Friday</td><td data-label="Breakfast">Eggs + toast + fruit</td><td data-label="Lunch">Leftover chickpea curry</td><td data-label="Dinner">Miso-ginger fish + rice + vegetables</td><td data-label="Snack">Greek yogurt + banana</td></tr>
+<tr><td class="day" data-label="Day">Saturday</td><td data-label="Breakfast">Banana-walnut oatmeal</td><td data-label="Lunch">Tuna & chickpea pitas</td><td data-label="Dinner">Moroccan chickpea & vegetable bowls</td><td data-label="Snack">Fruit + peanut butter</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="grocery">
+<h2>Grocery List</h2>
+<p class="lead">Tap the boxes while shopping. Your checked items are saved in this browser on this device. “Used in” shows why each item is here.</p>
+
+<div class="grid grid2">
+<div class="card"><h3>Protein & Dairy</h3><div class="checklist">
+<label class="check"><input type="checkbox" data-g><span><b>Chicken</b> <span class="qty">2½–3 lb</span><br><span class="used">Sun dinner, Mon lunch, Tue fajita bowls</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Frozen white fish</b> <span class="qty">~1½ lb</span><br><span class="used">Fri miso-ginger fish</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Canned tuna</b> <span class="qty">3 cans</span><br><span class="used">Wed pasta, Sat pitas</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Eggs</b> <span class="qty">1 dozen</span><br><span class="used">Tue/Fri breakfasts</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Plain Greek yogurt</b> <span class="qty">32 oz</span><br><span class="used">Breakfasts, snacks, bowls</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Feta</b> <span class="qty">6–8 oz</span><br><span class="used">Chickpea bowls, pitas</span></span></label>
+</div></div>
+
+<div class="card"><h3>Beans & Legumes</h3><div class="checklist">
+<label class="check"><input type="checkbox" data-g><span><b>Chickpeas</b> <span class="qty">4 cans</span><br><span class="used">Sun bowls, Thu curry, Sat Moroccan bowls, Sat pitas</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Black beans</b> <span class="qty">2 cans</span><br><span class="used">Tue fajita bowls</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>White beans</b> <span class="qty">2 cans</span><br><span class="used">Wed tuna pasta</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Dry red lentils</b> <span class="qty">1 lb</span><br><span class="used">Mon dal</span></span></label>
+</div></div>
+
+<div class="card"><h3>Grains & Bakery</h3><div class="checklist">
+<label class="check"><input type="checkbox" data-g><span><b>Brown rice</b> <span class="qty">2 lb</span><br><span class="used">Sun/Mon/Tue/Thu/Fri/Sat</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Whole-wheat pasta</b> <span class="qty">1 lb</span><br><span class="used">Wed dinner/Thu lunch</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Old-fashioned oats</b><br><span class="used">Breakfasts + overnight oats</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Whole-grain bread</b><br><span class="used">Breakfast toast</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Whole-wheat pita</b><br><span class="used">Sat lunch</span></span></label>
+</div></div>
+
+<div class="card"><h3>Produce</h3><div class="checklist">
+<label class="check"><input type="checkbox" data-g><span><b>Bananas</b> <span class="qty">6–8</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Apples</b> <span class="qty">~8</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Carrots</b> <span class="qty">2 lb</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Cucumbers</b> <span class="qty">2</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Tomatoes</b> <span class="qty">~2 lb</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Baby spinach</b> <span class="qty">10–16 oz</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Onions</b> <span class="qty">3 lb</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Garlic</b> <span class="qty">1 bulb</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Lemons</b> <span class="qty">3</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Limes</b> <span class="qty">2</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Potatoes</b> <span class="qty">3 lb</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Bell peppers or inexpensive seasonal vegetables</b> <span class="qty">4–5</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Fresh ginger</b> <span class="qty">1 small piece</span></span></label>
+</div></div>
+
+<div class="card"><h3>Pantry / Flavor</h3><div class="checklist">
+<label class="check"><input type="checkbox" data-g><span><b>Extra-virgin olive oil</b><br><span class="used">Cooking + dressing</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Walnuts</b><br><span class="used">Breakfasts</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Peanut butter</b><br><span class="used">Snacks + optional curry thickener</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Soy sauce</b><br><span class="used">Fri fish</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Miso</b> <span class="qty">small tub</span><br><span class="used">Fri fish; skip if unavailable and use soy/ginger glaze</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Canned light coconut milk</b> <span class="qty">1 can</span><br><span class="used">Thu curry; optional</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Honey</b><br><span class="used">Fish glaze; optional</span></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Curry powder or garam masala</b></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Cumin, chili powder, paprika, cinnamon, oregano</b></span></label>
+<label class="check"><input type="checkbox" data-g><span><b>Salt + black pepper</b></span></label>
+</div></div>
+</div>
+<div class="callout" style="margin-top:16px"><strong>Budget note:</strong> The ~$100 target assumes basic pantry staples such as olive oil, salt, pepper and common spices are already on hand. Specialty items like miso and coconut milk can push a first-week stock-up higher, but they are small purchases that can carry into future weeks. Store brands, frozen fish/vegetables, chicken thighs, and seasonal produce are all fair game.</div>
+</section>
+
+<section id="prep">
+<h2>Sunday Prep: The 90–120 Minute Game Plan</h2>
+<div class="grid grid2">
+<div class="card"><h3>1. Get the oven working</h3><p>Heat oven to 425°F. Chop potatoes, carrots, onion and peppers. Toss with olive oil, salt and pepper. Season chicken with lemon, garlic, oregano, salt and pepper. Roast vegetables and chicken until chicken reaches 165°F and vegetables are browned and tender, about 30–40 minutes depending on cut.</p></div>
+<div class="card"><h3>2. Cook a big pot of rice</h3><p>Cook about 6 cups cooked brown rice. Cool slightly, then portion into shallow containers. Keep enough for the first few days in the refrigerator and freeze any portion you will not use within about 4 days.</p></div>
+<div class="card"><h3>3. Make the dal</h3><p>Cook the full red lentil & spinach dal recipe below. Cool and refrigerate. This covers Monday dinner and Tuesday lunch.</p></div>
+<div class="card"><h3>4. Chop, don't over-prep</h3><p>Wash/chop cucumbers, carrots, tomatoes, onions and peppers. Store separately so they remain useful across several meals rather than becoming one giant salad.</p></div>
+<div class="card"><h3>5. Make two overnight oats</h3><p>Combine ½ cup oats, ½ cup Greek yogurt, ½ cup milk or water, cinnamon and chopped apple per serving. Refrigerate. Add banana/walnuts when eating.</p></div>
+<div class="card"><h3>6. Make the lemon-oregano dressing</h3><p>Whisk 3 tbsp olive oil + 1 tbsp lemon juice + 1 minced garlic clove + ½ tsp oregano + pepper + pinch of salt. Use on chickpea bowls and pitas.</p></div>
+</div>
+</section>
+
+<section id="recipes">
+<h2>Recipe Book</h2>
+<p class="lead">These are the “worth cooking” recipes. Leftover meals are intentionally handled as assemblies rather than pretending every leftover needs a brand-new recipe.</p>
+
+<details class="recipe" open><summary>Mediterranean Chickpea Bowls</summary><div class="recipebody"><div class="meta"><span class="pill">Serves 2</span><span class="pill">Prep 10 min</span><span class="pill">No cooking</span><span class="pill">Sun lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>1 can chickpeas, drained/rinsed</li><li>1 cucumber, chopped</li><li>1 tomato, chopped</li><li>¼–½ small onion, thinly sliced</li><li>2 cups spinach</li><li>¼ cup feta</li><li>1 cup cooked brown rice</li><li>2 tbsp lemon-oregano dressing</li><li>Black pepper</li></ul></div><div><h3>Directions</h3><ol><li>Divide spinach and rice between two bowls.</li><li>Add chickpeas, cucumber, tomato and onion.</li><li>Top with feta and dressing.</li><li>Add pepper and lemon if desired.</li></ol><h3>Meal prep</h3><p>Keep dressing separate until eating. Assemble in under 5 minutes.</p><h3>Mediterranean connection</h3><p>Legumes, vegetables, whole grains, olive oil and modest cheese do most of the work.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Lemon-Oregano Chicken with Potatoes & Vegetables</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 15 min</span><span class="pill">Cook 30–40 min</span><span class="pill">Sun dinner + leftovers</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>2½–3 lb chicken thighs or breasts</li><li>1½ lb potatoes, cubed</li><li>3 carrots, chopped</li><li>1 onion, cut into wedges</li><li>2 tbsp olive oil</li><li>Juice of 1 lemon</li><li>2 garlic cloves, minced</li><li>2 tsp dried oregano</li><li>1 tsp paprika</li><li>Salt and pepper</li></ul></div><div><h3>Directions</h3><ol><li>Heat oven to 425°F.</li><li>Put potatoes, carrots and onion on a sheet pan. Toss with 1 tbsp oil, salt, pepper and paprika.</li><li>Rub chicken with remaining oil, lemon juice, garlic, oregano, salt and pepper.</li><li>Arrange chicken among vegetables. Roast until chicken reaches 165°F and vegetables are tender, about 30–40 minutes.</li><li>Rest chicken 5 minutes. Divide two servings for Sunday dinner and refrigerate the rest promptly.</li></ol><h3>Leftover plan</h3><p>Use chicken and roasted vegetables for Monday lunch. Save enough chicken for Tuesday fajita bowls.</p><h3>Swap</h3><p>Chicken thighs are often cheaper and stay juicy. Frozen vegetables can replace some fresh produce.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Indian-Inspired Red Lentil & Spinach Dal</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 25 min</span><span class="pill">Mon dinner + Tue lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>1 cup dry red lentils, rinsed</li><li>1 small onion, diced</li><li>2 garlic cloves, minced</li><li>1 can diced tomatoes</li><li>2 cups spinach</li><li>1 tbsp olive oil</li><li>1 tsp cumin</li><li>1 tsp curry powder or garam masala</li><li>½ tsp paprika</li><li>3 cups water or low-sodium broth</li><li>Salt and pepper</li><li>Lemon wedge, optional</li></ul></div><div><h3>Directions</h3><ol><li>Heat oil in a pot over medium heat. Cook onion 4–5 minutes.</li><li>Add garlic, cumin, curry powder and paprika. Stir for 30 seconds.</li><li>Add tomatoes, lentils and broth. Bring to a boil.</li><li>Reduce to a simmer and cook 18–22 minutes, stirring occasionally, until lentils are soft and creamy.</li><li>Stir in spinach for the final 2 minutes.</li><li>Season with salt, pepper and lemon.</li><li>Serve over brown rice.</li></ol><h3>Storage</h3><p>Cool promptly and refrigerate. Reheat gently with a splash of water; lentils thicken as they sit.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Mexican-Inspired Chicken & Black Bean Fajita Bowls</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 10 min</span><span class="pill">Tue dinner + Wed lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>2 cups leftover cooked chicken, sliced/shredded</li><li>1½ cans black beans, drained/rinsed</li><li>2 bell peppers, sliced</li><li>1 onion, sliced</li><li>2 cups cooked brown rice</li><li>1 tbsp olive oil</li><li>1½ tsp chili powder</li><li>1 tsp cumin</li><li>½ tsp paprika</li><li>Lime juice</li><li>Optional: Greek yogurt, salsa, feta</li></ul></div><div><h3>Directions</h3><ol><li>Heat oil in a large skillet.</li><li>Cook peppers and onion 5–7 minutes until browned and tender.</li><li>Add chili powder, cumin and paprika.</li><li>Add chicken and black beans; heat through, about 3 minutes.</li><li>Serve over rice with lime. Add a spoonful of Greek yogurt or salsa if available.</li></ol><h3>Meal prep</h3><p>Pack rice separately if you want the vegetables to stay firmer. Reheat until steaming hot.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Italian-Inspired Tuna, White Bean & Spinach Pasta</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 15 min</span><span class="pill">Wed dinner + Thu lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>8 oz whole-wheat pasta</li><li>2 cans tuna, drained</li><li>1 can white beans, drained/rinsed</li><li>3 cups spinach</li><li>1 tomato, chopped</li><li>1–2 garlic cloves, minced</li><li>1 tbsp olive oil</li><li>Juice/zest of ½ lemon</li><li>¼ cup feta, optional</li><li>Black pepper</li></ul></div><div><h3>Directions</h3><ol><li>Cook pasta according to package directions. Reserve ½ cup pasta water, then drain.</li><li>Warm olive oil in a skillet. Add garlic and tomato; cook 2–3 minutes.</li><li>Add beans and spinach. Cook until spinach wilts.</li><li>Stir in tuna and pasta. Add a splash of pasta water until glossy.</li><li>Finish with lemon, pepper and feta if using.</li></ol><h3>Storage</h3><p>Refrigerate leftovers in shallow containers. Reheat with a tablespoon of water to loosen.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Thai-Inspired Chickpea Vegetable Curry</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 20 min</span><span class="pill">Thu dinner + Fri lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>2 cans chickpeas, drained/rinsed</li><li>1 can light coconut milk</li><li>1 bell pepper, sliced</li><li>2 carrots, thinly sliced</li><li>½ onion, sliced</li><li>2 cups spinach</li><li>1 tbsp peanut butter, optional</li><li>1 tsp curry powder</li><li>1 tsp grated ginger</li><li>1 tbsp soy sauce</li><li>Juice of 1 lime</li><li>1 cup water</li></ul></div><div><h3>Directions</h3><ol><li>Cook onion, carrots and pepper in a little olive oil for 5 minutes.</li><li>Add ginger and curry powder; stir 30 seconds.</li><li>Add chickpeas, coconut milk and water. Simmer 10 minutes.</li><li>Stir in spinach, soy sauce and peanut butter if using.</li><li>Cook 2–3 minutes more. Finish with lime.</li><li>Serve over brown rice.</li></ol><h3>Budget swap</h3><p>Skip coconut milk and use 1½ cups broth/water plus an extra tablespoon of peanut butter. It will be less creamy but still flavorful.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Japanese-Inspired Miso-Ginger Fish</summary><div class="recipebody"><div class="meta"><span class="pill">2 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 12–15 min</span><span class="pill">Fri dinner</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>~1 lb white fish fillets</li><li>1 tbsp miso</li><li>1 tbsp soy sauce</li><li>1 tsp honey, optional</li><li>1 tsp grated ginger</li><li>1 tsp lime/lemon juice</li><li>1–2 cups mixed vegetables</li><li>1½ cups cooked brown rice</li></ul></div><div><h3>Directions</h3><ol><li>Heat oven to 400°F.</li><li>Mix miso, soy sauce, ginger, honey and citrus.</li><li>Pat fish dry and brush with glaze.</li><li>Bake until opaque and the center reaches 145°F, usually 10–15 minutes depending on thickness.</li><li>Steam or sauté vegetables while fish cooks.</li><li>Serve with rice and vegetables.</li></ol><h3>Simple alternative</h3><p>No miso? Use soy sauce + ginger + a little honey. It is not a traditional miso glaze, but keeps the meal practical.</p></div></div></div></details>
+
+<details class="recipe" open><summary>Moroccan-Inspired Chickpea & Vegetable Bowls</summary><div class="recipebody"><div class="meta"><span class="pill">4 servings</span><span class="pill">Prep 10 min</span><span class="pill">Cook 15 min</span><span class="pill">Sat dinner</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>1 can chickpeas, drained/rinsed</li><li>1 onion, chopped</li><li>2 carrots, chopped</li><li>1 bell pepper, chopped</li><li>1 can diced tomatoes</li><li>1 tbsp olive oil</li><li>1 tsp cumin</li><li>1 tsp paprika</li><li>½ tsp cinnamon</li><li>½ tsp ginger, optional</li><li>2 cups spinach</li><li>2 cups cooked brown rice</li><li>Lemon juice</li></ul></div><div><h3>Directions</h3><ol><li>Cook onion, carrots and pepper in olive oil for 6–7 minutes.</li><li>Add cumin, paprika, cinnamon and ginger. Stir for 30 seconds.</li><li>Add tomatoes and chickpeas. Simmer 7–8 minutes.</li><li>Stir in spinach until wilted.</li><li>Serve over rice with lemon.</li></ol><h3>Clean-out-the-fridge option</h3><p>Use whatever vegetables remain from the week. This is intentionally flexible and should not trigger another grocery run.</p></div></div></div></details>
+
+<details class="recipe"><summary>Tuna & Chickpea Pitas</summary><div class="recipebody"><div class="meta"><span class="pill">2 servings</span><span class="pill">Prep 10 min</span><span class="pill">No cooking</span><span class="pill">Sat lunch</span></div><div class="recipegrid"><div><h3>Ingredients</h3><ul><li>1 can tuna, drained</li><li>½ can chickpeas, mashed</li><li>2 tbsp Greek yogurt</li><li>1 tsp lemon juice</li><li>¼ cucumber, diced</li><li>1 tbsp chopped onion</li><li>2 whole-wheat pitas</li><li>Spinach</li><li>Feta, optional</li></ul></div><div><h3>Directions</h3><ol><li>Mix tuna, chickpeas, yogurt, lemon, cucumber and onion.</li><li>Season with pepper.</li><li>Stuff into pitas with spinach and feta.</li></ol><p class="small">A five-minute lunch that uses ingredients already in the cart.</p></div></div></div></details>
+
+<h3 style="margin-top:28px">Breakfast & Snack Assemblies</h3>
+<div class="grid grid2">
+<div class="card"><h3>Banana-Walnut Oatmeal</h3><p>Cook ½ cup oats with water or milk. Top with ½ banana, 1–2 tbsp walnuts and cinnamon. Add a spoonful of Greek yogurt if desired.</p></div>
+<div class="card"><h3>Greek Yogurt Bowl</h3><p>¾–1 cup Greek yogurt + ¼ cup oats + banana or apple + walnuts + cinnamon. Add a drizzle of honey if desired.</p></div>
+<div class="card"><h3>Eggs + Spinach Toast</h3><p>Scramble or fry 2 eggs with a handful of spinach. Serve over whole-grain toast with fruit.</p></div>
+<div class="card"><h3>Apple-Cinnamon Overnight Oats</h3><p>Mix ½ cup oats + ½ cup Greek yogurt + ½ cup milk/water + diced apple + cinnamon. Refrigerate overnight; add walnuts before eating.</p></div>
+<div class="card"><h3>Vegetables + Hummus</h3><p>Slice carrots and cucumber. Serve with 2–3 tbsp hummus.</p></div>
+<div class="card"><h3>Fruit + Peanut Butter</h3><p>One apple or banana with 1 tbsp peanut butter. Simple on purpose.</p></div>
+</div>
+</section>
+
+<section id="leftovers">
+<h2>Leftover Map</h2>
+<div class="grid grid2">
+<div class="card"><h3>Sunday chicken</h3><p>→ Sunday dinner<br>→ Monday lunch<br>→ Tuesday fajita bowls</p></div>
+<div class="card"><h3>Brown rice</h3><p>→ Chickpea bowls<br>→ Dal<br>→ Fajita bowls<br>→ Thai curry<br>→ Fish<br>→ Moroccan bowls</p></div>
+<div class="card"><h3>Red lentil dal</h3><p>→ Monday dinner<br>→ Tuesday lunch</p></div>
+<div class="card"><h3>Tuna pasta</h3><p>→ Wednesday dinner<br>→ Thursday lunch</p></div>
+<div class="card"><h3>Chickpeas</h3><p>→ Sunday bowls<br>→ Thursday curry<br>→ Saturday pitas/Moroccan bowls</p></div>
+<div class="card"><h3>Saturday rule</h3><p>Use what remains. The goal is an empty-ish refrigerator, not another shopping trip.</p></div>
+</div>
+</section>
+
+<section id="notes">
+<h2>Joe & Jenny's Meal Notes</h2>
+<p class="lead">This is the part that turns Week 1 into a better Week 2. Pick a quick reaction and add a note. These are saved in this browser.</p>
+<div class="grid grid2">
+<div class="card"><h3>Meals to remember</h3>
+<p class="small">Use the note fields below for recipes you want repeated, modified, or retired.</p>
+<textarea id="notesBox" style="width:100%;min-height:190px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit" placeholder="Example: Dal — loved it. Make it thicker next time. Fish — good but use more glaze."></textarea>
+<br><button onclick="saveNotes()" style="margin-top:10px">Save notes</button> <span id="saveStatus" class="small"></span>
+</div>
+<div class="card"><h3>Future-week rules</h3>
+<ul>
+<li>Keep Mediterranean nutrition as the foundation.</li>
+<li>Use global flavors to prevent repetition.</li>
+<li>Favor ingredients that appear in 2–3 meals.</li>
+<li>Keep specialty ingredients limited.</li>
+<li>Build around leftovers instead of creating seven unrelated dinners.</li>
+<li>Keep the grocery target around $100 when practical.</li>
+<li>Use “loved / pretty good / change X / don't make again” feedback to shape future weeks.</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+
+<footer><div class="container">Week 1 is designed as a practical starting point, not a rigid prescription. Adjust portions, ingredients, and seasonings to your household and budget.</div></footer>
+
+<script>
+const KEY="joe-jenny-week1-grocery";
+const NOTEKEY="joe-jenny-week1-notes";
+const boxes=[...document.querySelectorAll("input[data-g]")];
+function saveChecks(){
+  localStorage.setItem(KEY, JSON.stringify(boxes.map(x=>x.checked)));
+  updateProgress();
+}
+function loadChecks(){
+  try{
+    const vals=JSON.parse(localStorage.getItem(KEY)||"[]");
+    boxes.forEach((x,i)=>{x.checked=!!vals[i]; x.closest(".check").classList.toggle("done",x.checked)});
+  }catch(e){}
+  updateProgress();
+}
+function updateProgress(){
+  const done=boxes.filter(x=>x.checked).length;
+  const pct=boxes.length?Math.round(done/boxes.length*100):0;
+  document.getElementById("groceryProgress").value=pct/100;
+  document.getElementById("progressText").textContent=pct+"%";
+  boxes.forEach(x=>x.closest(".check").classList.toggle("done",x.checked));
+}
+boxes.forEach(x=>x.addEventListener("change",saveChecks));
+function clearChecks(){localStorage.removeItem(KEY); boxes.forEach(x=>x.checked=false); updateProgress();}
+function saveNotes(){
+  localStorage.setItem(NOTEKEY,document.getElementById("notesBox").value);
+  document.getElementById("saveStatus").textContent="Saved on this device.";
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  loadChecks();
+  document.getElementById("notesBox").value=localStorage.getItem(NOTEKEY)||"";
+});
+</script>
+</body>
+</html>
