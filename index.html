@@ -156,6 +156,12 @@ button:hover{background:#f1f5f1}
 
 <section id="grocery">
 <h2>Grocery List</h2>
+<div class="card" id="selectedShopping" style="margin:12px 0 20px">
+  <h3 style="margin-top:0">Your Selected Products</h3>
+  <p class="small">Choices from Product Choices are carried into the shopping list on this device.</p>
+  <div id="selectedShoppingItems"></div>
+  <div id="selectedShoppingTotal" class="choice-selected" style="margin-top:12px"></div>
+</div>
 <p class="lead">Tap the boxes while shopping. Your checked items are saved in this browser on this device. “Used in” shows why each item is here.</p>
 
 <div class="grid grid2">
@@ -305,6 +311,12 @@ button:hover{background:#f1f5f1}
 .choice-option label{display:block;cursor:pointer}.choice-option input{margin-right:8px}.choice-price{font-size:1.15rem;font-weight:700;margin:10px 0}
 .choice-meta{font-size:.92rem}.choice-reason{font-size:.9rem;margin-top:10px}.choice-selected{font-weight:700;margin-top:10px}
 @media(max-width:650px){.choice-options{grid-template-columns:1fr}}
+</style>
+
+<style>
+.shopping-line{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #e5e9e5}
+.shopping-line:last-child{border-bottom:0}.shopping-name{font-weight:700}.shopping-meta{font-size:.9rem}
+@media(max-width:650px){.shopping-line{display:block}.shopping-price{margin-top:4px}}
 </style>
 
 <script>
@@ -537,10 +549,56 @@ function renderChoiceGroups(products,prices){
       radios.forEach(r=>r.closest(".choice-option")?.classList.toggle("selected",r.checked));
       const chosen=byId[selected], target=document.getElementById(`selected-${group.ingredient}`);
       if(target)target.textContent=`Selected: ${chosen.product_name}`;
+      updateSelectedShopping();
     };
     radios.forEach(r=>r.addEventListener("change",update));update();
   });
 }
+
+async function updateSelectedShopping(){
+  const wrap=document.getElementById("selectedShoppingItems");
+  const totalEl=document.getElementById("selectedShoppingTotal");
+  if(!wrap||!totalEl)return;
+  try{
+    const [productsResult,priceResult]=await Promise.all([apiJsonp("products"),apiJsonp("prices")]);
+    const products=(productsResult.data||[]).filter(p=>p.active!==false);
+    const prices=priceResult.data||[];
+    const choices=loadChoices();
+    const byId=Object.fromEntries(products.map(p=>[p.product_id,p]));
+    const latest={};
+    prices.forEach(row=>{
+      if(row.product_id&&(!latest[row.product_id]||String(row.date_checked)>String(latest[row.product_id].date_checked))){
+        latest[row.product_id]=row;
+      }
+    });
+    const ingredientNames={
+      ING007:"Peanut butter",
+      ING006:"Plain/Greek yogurt",
+      ING025:"Old-fashioned oats"
+    };
+    const selectedIds=["ING007","ING006","ING025"].map(ing=>({ing,id:choices[ing]})).filter(x=>x.id&&byId[x.id]);
+    if(!selectedIds.length){
+      wrap.innerHTML='<div class="small">Make a product selection above to see it here.</div>';
+      totalEl.textContent="";
+      return;
+    }
+    let total=0, priced=0;
+    wrap.innerHTML=selectedIds.map(({ing,id})=>{
+      const p=byId[id], pr=choicePrice(latest[id]);
+      if(pr){total+=pr.value;priced++;}
+      return `<div class="shopping-line">
+        <div><div class="shopping-name">${escapeHtml(ingredientNames[ing]||p.product_name)}</div>
+        <div class="shopping-meta">${escapeHtml(p.product_name)} · ${escapeHtml(p.package_size||"")}</div></div>
+        <div class="shopping-price"><strong>${pr?money(pr.value):"Price not verified"}</strong></div>
+      </div>`;
+    }).join("");
+    totalEl.textContent=priced ? `Selected products subtotal: ${money(total)}${priced<selectedIds.length?" · some prices not verified":""}` : "Selected products subtotal: price pending";
+  }catch(err){
+    wrap.innerHTML='<div class="small">Selected product pricing could not be loaded.</div>';
+    totalEl.textContent="";
+  }
+}
+
 async function loadProductChoices(){
   try{
     const [productsResult,priceResult]=await Promise.all([apiJsonp("products"),apiJsonp("prices")]);
@@ -553,6 +611,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("notesBox").value=localStorage.getItem(NOTEKEY)||"";
   loadLiveKitchenData();
   loadProductChoices();
+  setTimeout(updateSelectedShopping, 100);
 });
 </script>
 </body>
