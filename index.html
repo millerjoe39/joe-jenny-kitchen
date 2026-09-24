@@ -107,7 +107,7 @@ button:hover{background:#f1f5f1}
 </header>
 
 <nav><div class="container navscroll">
-<a href="#live-data">Live Data</a><a href="#week">This Week</a><a href="#grocery">Grocery List</a><a href="#prep">Sunday Prep</a><a href="#recipes">Recipes</a><a href="#leftovers">Leftovers</a><a href="#notes">Ratings</a>
+<a href="#live-data">Live Data</a><a href="#choices">Product Choices</a><a href="#week">This Week</a><a href="#grocery">Grocery List</a><a href="#prep">Sunday Prep</a><a href="#recipes">Recipes</a><a href="#leftovers">Leftovers</a><a href="#notes">Ratings</a>
 </div></nav>
 
 <main class="container">
@@ -123,6 +123,14 @@ button:hover{background:#f1f5f1}
   <div id="apiStatus"><strong>Database:</strong> connecting…</div>
   <p class="small">This page can read the shared kitchen product catalog from the Google Sheet API. Personal preferences, pantry data, and ratings are intentionally not exposed here.</p>
   <div id="productSnapshot" class="grid grid2" style="margin-top:12px"></div>
+</div>
+</section>
+
+<section id="choices">
+<h2>Product Choices</h2>
+<div class="card">
+  <p>Choose the actual store product for an ingredient. Prices and nutrition come from the live Kitchen database when available.</p>
+  <div id="choiceGroups"></div>
 </div>
 </section>
 
@@ -290,6 +298,15 @@ button:hover{background:#f1f5f1}
 
 <footer><div class="container">Week 1 is designed as a practical starting point, not a rigid prescription. Adjust portions, ingredients, and seasonings to your household and budget.</div></footer>
 
+<style>
+.choice-group{margin:18px 0 26px}.choice-group h3{margin-bottom:6px}.choice-subtitle{margin-top:0}
+.choice-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:12px}
+.choice-option{border:1px solid #dfe5df;border-radius:14px;padding:16px;background:#fff}.choice-option.selected{border:2px solid #355e3b}
+.choice-option label{display:block;cursor:pointer}.choice-option input{margin-right:8px}.choice-price{font-size:1.15rem;font-weight:700;margin:10px 0}
+.choice-meta{font-size:.92rem}.choice-reason{font-size:.9rem;margin-top:10px}.choice-selected{font-weight:700;margin-top:10px}
+@media(max-width:650px){.choice-options{grid-template-columns:1fr}}
+</style>
+
 <script>
 /*
  * Joe & Jenny Kitchen — API bridge
@@ -455,10 +472,87 @@ function escapeHtml(value){
     .replaceAll("'","&#039;");
 }
 
+
+const CHOICE_KEY="joe-jenny-product-choices";
+function loadChoices(){try{return JSON.parse(localStorage.getItem(CHOICE_KEY)||"{}")}catch(e){return {}}}
+function saveChoices(c){localStorage.setItem(CHOICE_KEY,JSON.stringify(c))}
+function choicePrice(row){
+  if(!row)return null;
+  const sale=Number(row.sale_price), regular=Number(row.regular_price);
+  if(Number.isFinite(sale)&&sale>0)return {value:sale,sale:true,regular:Number.isFinite(regular)&&regular>0?regular:null};
+  if(Number.isFinite(regular)&&regular>0)return {value:regular,sale:false,regular};
+  return null;
+}
+function productCard(p,priceRow,selectedId){
+  const price=choicePrice(priceRow);
+  const nutrition=[
+    p.calories!==""?`${escapeHtml(String(p.calories))} cal`:"",
+    p.protein_g!==""?`${escapeHtml(String(p.protein_g))}g protein`:"",
+    p.sugar_g!==""?`${escapeHtml(String(p.sugar_g))}g sugar`:"",
+    p.sodium_mg!==""?`${escapeHtml(String(p.sodium_mg))}mg sodium`:""
+  ].filter(Boolean).join(" · ");
+  const reasons={
+    PROD001:"28 oz package at the same listed price as the crunchy option.",
+    PROD002:"28 oz package with lower listed calories and sodium than the creamy option.",
+    PROD003:"Smaller 18 oz package; useful if package size or upfront cost is the priority.",
+    PROD004:"Plain Greek yogurt is a versatile base for breakfasts, sauces, and snacks.",
+    PROD005:"Sweetened honey-vanilla option for convenient sweetness.",
+    PROD012:"42 oz package; useful as a household breakfast staple."
+  };
+  const checked=p.product_id===selectedId;
+  return `<div class="choice-option ${checked?"selected":""}">
+    <label><input type="radio" name="choice-${escapeHtml(p.ingredient_id)}" value="${escapeHtml(p.product_id)}" ${checked?"checked":""}>
+    <strong>${escapeHtml(p.product_name)}</strong></label>
+    <div class="small">${escapeHtml(p.brand||"")} · ${escapeHtml(p.package_size||"")}</div>
+    <div class="choice-price">${price?money(price.value):"Price not verified"}${price?.sale?` <span class="small">sale <s>${money(price.regular)}</s></span>`:""}</div>
+    <div class="choice-meta">${nutrition||"Nutrition pending"}</div>
+    <div class="choice-reason">${escapeHtml(reasons[p.product_id]||"Product information available in the Kitchen database.")}</div>
+  </div>`;
+}
+function renderChoiceGroups(products,prices){
+  const container=document.getElementById("choiceGroups"), choices=loadChoices();
+  const groups=[
+    {ingredient:"ING007",name:"Peanut Butter",ids:["PROD001","PROD002","PROD003"]},
+    {ingredient:"ING006",name:"Greek Yogurt",ids:["PROD004","PROD005"]},
+    {ingredient:"ING025",name:"Old-Fashioned Oats",ids:["PROD012"]}
+  ];
+  const byId=Object.fromEntries(products.map(p=>[p.product_id,p])), latest={};
+  prices.forEach(row=>{if(row.product_id&&(!latest[row.product_id]||String(row.date_checked)>String(latest[row.product_id].date_checked)))latest[row.product_id]=row});
+  container.innerHTML=groups.map(group=>{
+    const available=group.ids.map(id=>byId[id]).filter(Boolean);
+    if(!available.length)return "";
+    const selected=choices[group.ingredient]||available[0].product_id;
+    return `<div class="choice-group"><h3>${escapeHtml(group.name)}</h3>
+      <p class="choice-subtitle small">Choose the product that fits this week's priorities. Your choice is saved on this device.</p>
+      <div class="choice-options">${available.map(p=>productCard(p,latest[p.product_id],selected)).join("")}</div>
+      <div class="choice-selected" id="selected-${group.ingredient}"></div></div>`;
+  }).join("");
+  groups.forEach(group=>{
+    const radios=[...document.querySelectorAll(`input[name="choice-${group.ingredient}"]`)];
+    const available=group.ids.map(id=>byId[id]).filter(Boolean);
+    if(!radios.length)return;
+    const update=()=>{
+      const selected=radios.find(r=>r.checked)?.value;if(!selected)return;
+      const state=loadChoices();state[group.ingredient]=selected;saveChoices(state);
+      radios.forEach(r=>r.closest(".choice-option")?.classList.toggle("selected",r.checked));
+      const chosen=byId[selected], target=document.getElementById(`selected-${group.ingredient}`);
+      if(target)target.textContent=`Selected: ${chosen.product_name}`;
+    };
+    radios.forEach(r=>r.addEventListener("change",update));update();
+  });
+}
+async function loadProductChoices(){
+  try{
+    const [productsResult,priceResult]=await Promise.all([apiJsonp("products"),apiJsonp("prices")]);
+    renderChoiceGroups((productsResult.data||[]).filter(p=>p.active!==false),priceResult.data||[]);
+  }catch(err){document.getElementById("choiceGroups").innerHTML='<div class="small">Product choices could not be loaded right now.</div>';console.warn("Product choices:",err)}
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   loadChecks();
   document.getElementById("notesBox").value=localStorage.getItem(NOTEKEY)||"";
   loadLiveKitchenData();
+  loadProductChoices();
 });
 </script>
 </body>
