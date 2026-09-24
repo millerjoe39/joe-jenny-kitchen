@@ -384,34 +384,64 @@ async function loadLiveKitchenData(){
   const snapshot=document.getElementById("productSnapshot");
 
   try{
-    const result=await apiJsonp("products");
-    const products=(result.data||[]).filter(p=>p.active!==false);
+    const [productResult, priceResult]=await Promise.all([
+      apiJsonp("products"),
+      apiJsonp("prices")
+    ]);
 
-    status.innerHTML="<strong>Database:</strong> connected · "+products.length+" active products";
+    const products=(productResult.data||[]).filter(p=>p.active!==false);
+    const prices=(priceResult.data||[]).filter(p=>p.product_id);
+
+    // Build a current-price lookup. If a product has multiple observations,
+    // use the most recent dated observation.
+    const latestPriceByProduct={};
+    prices.forEach(row=>{
+      const existing=latestPriceByProduct[row.product_id];
+      if(!existing || String(row.date_checked) > String(existing.date_checked)){
+        latestPriceByProduct[row.product_id]=row;
+      }
+    });
+
+    status.innerHTML="<strong>Database:</strong> connected · "+products.length+
+      " active products · "+prices.length+" price observations";
 
     const featured=products.filter(p=>[
       "PROD001","PROD002","PROD003","PROD004","PROD005","PROD012"
     ].includes(p.product_id));
 
-    snapshot.innerHTML=featured.map(p=>`
+    snapshot.innerHTML=featured.map(p=>{
+      const price=latestPriceByProduct[p.product_id];
+      const sale=price && price.sale_price!=="" && Number(price.sale_price)>0
+        ? Number(price.sale_price) : null;
+      const regular=price && price.regular_price!=="" && Number(price.regular_price)>0
+        ? Number(price.regular_price) : null;
+      const displayPrice=sale ?? regular;
+      const priceLabel=sale !== null
+        ? `<strong>${money(sale)}</strong> <span class="small">sale</span>${regular!==null ? ` <span class="small"><s>${money(regular)}</s></span>` : ""}`
+        : regular!==null
+          ? `<strong>${money(regular)}</strong>`
+          : `<strong>Price not verified</strong>`;
+
+      return `
       <div class="card" style="margin:0">
         <h3 style="margin-top:0">${escapeHtml(p.product_name)}</h3>
         <div class="small">${escapeHtml(p.brand||"")} · ${escapeHtml(p.package_size||"")}</div>
-        <p><strong>${money(p.price)}</strong></p>
+        <p>${priceLabel}</p>
         <div class="small">
           ${p.calories!=="" ? escapeHtml(String(p.calories))+" cal" : "Nutrition pending"}
           ${p.sugar_g!=="" ? " · "+escapeHtml(String(p.sugar_g))+"g sugar" : ""}
           ${p.sodium_mg!=="" ? " · "+escapeHtml(String(p.sodium_mg))+"mg sodium" : ""}
         </div>
-      </div>
-    `).join("");
+        ${price && price.date_checked ? `<div class="small" style="margin-top:8px">Price checked ${escapeHtml(String(price.date_checked))}</div>` : ""}
+      </div>`;
+    }).join("");
 
     if(!featured.length){
       snapshot.innerHTML='<div class="small">Product catalog is connected. Featured comparison data will appear as we add it.</div>';
     }
   }catch(err){
-    status.innerHTML="<strong>Database:</strong> not connected yet";
-    snapshot.innerHTML='<div class="small">Add your Apps Script /exec URL to API_BASE in this page, then reload.</div>';
+    status.innerHTML="<strong>Database:</strong> connected to page, but live price data could not be loaded";
+    snapshot.innerHTML='<div class="small">Products are available, but the price endpoint needs attention. The rest of the Kitchen can still load.</div>';
     console.warn("Kitchen API:", err);
   }
 }
