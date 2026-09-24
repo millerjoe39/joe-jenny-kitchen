@@ -107,13 +107,22 @@ button:hover{background:#f1f5f1}
 </header>
 
 <nav><div class="container navscroll">
-<a href="#week">This Week</a><a href="#grocery">Grocery List</a><a href="#prep">Sunday Prep</a><a href="#recipes">Recipes</a><a href="#leftovers">Leftovers</a><a href="#notes">Ratings</a>
+<a href="#live-data">Live Data</a><a href="#week">This Week</a><a href="#grocery">Grocery List</a><a href="#prep">Sunday Prep</a><a href="#recipes">Recipes</a><a href="#leftovers">Leftovers</a><a href="#notes">Ratings</a>
 </div></nav>
 
 <main class="container">
 <section id="intro">
 <div class="callout">
 <strong>The house rules:</strong> Mediterranean-style eating stays at the center—vegetables, fruit, beans/lentils, whole grains, olive oil, fish, nuts/seeds, and moderate poultry/eggs/dairy. The variety comes from Greek, Indian, Mexican, Italian, Thai, Japanese, and Moroccan-inspired flavors. We reuse ingredients aggressively enough to keep the grocery cart sane.
+</div>
+</section>
+
+<section id="live-data">
+<h2>Live Kitchen Database</h2>
+<div class="card">
+  <div id="apiStatus"><strong>Database:</strong> connecting…</div>
+  <p class="small">This page can read the shared kitchen product catalog from the Google Sheet API. Personal preferences, pantry data, and ratings are intentionally not exposed here.</p>
+  <div id="productSnapshot" class="grid grid2" style="margin-top:12px"></div>
 </div>
 </section>
 
@@ -282,9 +291,24 @@ button:hover{background:#f1f5f1}
 <footer><div class="container">Week 1 is designed as a practical starting point, not a rigid prescription. Adjust portions, ingredients, and seasonings to your household and budget.</div></footer>
 
 <script>
+/*
+ * Joe & Jenny Kitchen — API bridge
+ *
+ * IMPORTANT:
+ * Replace API_BASE below with the clean Apps Script Web App URL ending in /exec.
+ * Example: https://script.google.com/macros/s/XXXXXXXX/exec
+ *
+ * We use JSONP because Apps Script ContentService responses are redirected and
+ * browser cross-origin rules can otherwise get in the way. Google documents
+ * JSONP as an option for read-only JSON services.
+ */
+const API_BASE = "https://script.google.com/macros/s/AKfycbxPfeoOkpGxsI2fMzqFzmfCGHtQkb-Za9Ijcxay1PjG-hzzfTBIRW96e7uwVCmKI_st/exec";
+
 const KEY="joe-jenny-week1-grocery";
 const NOTEKEY="joe-jenny-week1-notes";
+
 const boxes=[...document.querySelectorAll("input[data-g]")];
+
 function saveChecks(){
   localStorage.setItem(KEY, JSON.stringify(boxes.map(x=>x.checked)));
   updateProgress();
@@ -292,7 +316,10 @@ function saveChecks(){
 function loadChecks(){
   try{
     const vals=JSON.parse(localStorage.getItem(KEY)||"[]");
-    boxes.forEach((x,i)=>{x.checked=!!vals[i]; x.closest(".check").classList.toggle("done",x.checked)});
+    boxes.forEach((x,i)=>{
+      x.checked=!!vals[i];
+      x.closest(".check").classList.toggle("done",x.checked)
+    });
   }catch(e){}
   updateProgress();
 }
@@ -304,14 +331,104 @@ function updateProgress(){
   boxes.forEach(x=>x.closest(".check").classList.toggle("done",x.checked));
 }
 boxes.forEach(x=>x.addEventListener("change",saveChecks));
-function clearChecks(){localStorage.removeItem(KEY); boxes.forEach(x=>x.checked=false); updateProgress();}
+function clearChecks(){
+  localStorage.removeItem(KEY);
+  boxes.forEach(x=>x.checked=false);
+  updateProgress();
+}
 function saveNotes(){
   localStorage.setItem(NOTEKEY,document.getElementById("notesBox").value);
   document.getElementById("saveStatus").textContent="Saved on this device.";
 }
+
+/* ---- Live Kitchen API ---- */
+function apiJsonp(action, extraParams={}){
+  return new Promise((resolve,reject)=>{
+    if(!API_BASE || API_BASE.includes("PASTE_YOUR")){
+      reject(new Error("API_BASE is not configured"));
+      return;
+    }
+
+    const callbackName="kitchenApi_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+    const script=document.createElement("script");
+    const params=new URLSearchParams({action, prefix:callbackName, ...extraParams});
+
+    window[callbackName]=(payload)=>{
+      cleanup();
+      if(payload && payload.ok) resolve(payload);
+      else reject(new Error(payload?.error || "API returned an error"));
+    };
+
+    function cleanup(){
+      delete window[callbackName];
+      script.remove();
+    }
+
+    script.onerror=()=>{
+      cleanup();
+      reject(new Error("Could not reach Kitchen API"));
+    };
+
+    script.src=API_BASE+(API_BASE.includes("?")?"&":"?")+params.toString();
+    document.head.appendChild(script);
+  });
+}
+
+function money(value){
+  const n=Number(value);
+  return Number.isFinite(n) ? "$"+n.toFixed(2) : "—";
+}
+
+async function loadLiveKitchenData(){
+  const status=document.getElementById("apiStatus");
+  const snapshot=document.getElementById("productSnapshot");
+
+  try{
+    const result=await apiJsonp("products");
+    const products=(result.data||[]).filter(p=>p.active!==false);
+
+    status.innerHTML="<strong>Database:</strong> connected · "+products.length+" active products";
+
+    const featured=products.filter(p=>[
+      "PROD001","PROD002","PROD003","PROD004","PROD005","PROD012"
+    ].includes(p.product_id));
+
+    snapshot.innerHTML=featured.map(p=>`
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">${escapeHtml(p.product_name)}</h3>
+        <div class="small">${escapeHtml(p.brand||"")} · ${escapeHtml(p.package_size||"")}</div>
+        <p><strong>${money(p.price)}</strong></p>
+        <div class="small">
+          ${p.calories!=="" ? escapeHtml(String(p.calories))+" cal" : "Nutrition pending"}
+          ${p.sugar_g!=="" ? " · "+escapeHtml(String(p.sugar_g))+"g sugar" : ""}
+          ${p.sodium_mg!=="" ? " · "+escapeHtml(String(p.sodium_mg))+"mg sodium" : ""}
+        </div>
+      </div>
+    `).join("");
+
+    if(!featured.length){
+      snapshot.innerHTML='<div class="small">Product catalog is connected. Featured comparison data will appear as we add it.</div>';
+    }
+  }catch(err){
+    status.innerHTML="<strong>Database:</strong> not connected yet";
+    snapshot.innerHTML='<div class="small">Add your Apps Script /exec URL to API_BASE in this page, then reload.</div>';
+    console.warn("Kitchen API:", err);
+  }
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   loadChecks();
   document.getElementById("notesBox").value=localStorage.getItem(NOTEKEY)||"";
+  loadLiveKitchenData();
 });
 </script>
 </body>
