@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#426b52"><title>Joe & Jenny's Global Mediterranean Kitchen — Next Week Planner</title><link rel="stylesheet" href="../css/kitchen.css"></head>
+<body>
+<header class="app-hero"><div class="container"><div class="eyebrow">Joe & Jenny's Global Mediterranean Kitchen</div><h1>Next Week Planner</h1><div class="subtitle">Mediterranean nutrition as the foundation. Global flavors for variety. One practical grocery cart, one Sunday prep session, and meals that are actually cookable.</div><div class="badges"><span class="badge">2 people</span><span class="badge">~$100 target</span><span class="badge">Mobile friendly</span></div></div></header>
+<nav class="app-nav"><div class="container navscroll"><a href="../index.html">Home</a><a href="../weeks/week-1.html">Week 1</a><a href="../groceries/index.html">Grocery</a><a href="../recipes/index.html">Recipes</a><a href="../products/index.html">Products</a><a href="../household/index.html">Household</a><a href="index.html">Next Week</a></div></nav>
+<main class="container page-main"><div class="breadcrumb">Kitchen 2.0 · Planner</div><section class="system-section" id="planner">
+<h2>Next Week Planner</h2>
+<p class="lead">Build a draft from the live recipe catalog using your local ratings and household settings. It is a starting point you can edit before shopping.</p>
+<div class="card">
+<div class="planner-toolbar"><button onclick="generateNextWeek()" type="button">Build a draft week</button><button class="secondary" onclick="clearNextWeek()" type="button">Clear draft</button><span class="small" id="plannerStatus"></span></div>
+<div class="planner-grid" id="plannerGrid" style="margin-top:14px"></div>
+<div class="system-actions" style="margin-top:14px"><button onclick="saveNextWeek()" type="button">Save next week</button></div>
+<div class="small" id="plannerSummary" style="margin-top:10px"></div>
+</div>
+</section><div class="quick-links">
+<a class="quick-link" href="../groceries/index.html"><strong>🛒 Grocery Trip</strong><span class="small">Build the cart, check off purchases, record actual prices.</span></a>
+<a class="quick-link" href="../recipes/index.html"><strong>🍳 Recipes & Prep</strong><span class="small">Sunday prep, recipes, and leftover planning.</span></a>
+<a class="quick-link" href="../products/index.html"><strong>🧺 Products</strong><span class="small">Choose products and compare available alternatives.</span></a>
+<a class="quick-link" href="../household/index.html"><strong>👫 Household</strong><span class="small">Ratings, preferences, notes, and spending history.</span></a>
+<a class="quick-link" href="index.html"><strong>📅 Next Week</strong><span class="small">Draft and save the next week's menu.</span></a>
+</div></main>
+<footer><div class="container">Joe & Jenny's Global Mediterranean Kitchen · Personal household state is stored locally unless explicitly sent to the shared Kitchen database.</div></footer>
+<script src="../js/kitchen.js"></script>
+</body></html>

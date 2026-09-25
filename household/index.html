@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#426b52"><title>Joe & Jenny's Global Mediterranean Kitchen — Household & Spending</title><link rel="stylesheet" href="../css/kitchen.css"></head>
+<body>
+<header class="app-hero"><div class="container"><div class="eyebrow">Joe & Jenny's Global Mediterranean Kitchen</div><h1>Household & Spending</h1><div class="subtitle">Mediterranean nutrition as the foundation. Global flavors for variety. One practical grocery cart, one Sunday prep session, and meals that are actually cookable.</div><div class="badges"><span class="badge">2 people</span><span class="badge">~$100 target</span><span class="badge">Mobile friendly</span></div></div></header>
+<nav class="app-nav"><div class="container navscroll"><a href="../index.html">Home</a><a href="../weeks/week-1.html">Week 1</a><a href="../groceries/index.html">Grocery</a><a href="../recipes/index.html">Recipes</a><a href="../products/index.html">Products</a><a href="index.html">Household</a><a href="../planner/index.html">Next Week</a></div></nav>
+<main class="container page-main"><div class="breadcrumb">Kitchen 2.0 · Household</div><section id="notes">
+<h2>Joe &amp; Jenny's Meal Notes</h2>
+<p class="lead">This is the part that turns Week 1 into a better Week 2. Pick a quick reaction and add a note. These are saved in this browser.</p>
+<div class="grid grid2">
+<div class="card"><h3>Meals to remember</h3>
+<p class="small">Use the note fields below for recipes you want repeated, modified, or retired.</p>
+<textarea id="notesBox" placeholder="Example: Dal — loved it. Make it thicker next time. Fish — good but use more glaze." style="width:100%;min-height:190px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit"></textarea>
+<br/><button onclick="saveNotes()" style="margin-top:10px">Save notes</button> <span class="small" id="saveStatus"></span>
+</div>
+<div class="card"><h3>Future-week rules</h3>
+<ul>
+<li>Keep Mediterranean nutrition as the foundation.</li>
+<li>Use global flavors to prevent repetition.</li>
+<li>Favor ingredients that appear in 2–3 meals.</li>
+<li>Keep specialty ingredients limited.</li>
+<li>Build around leftovers instead of creating seven unrelated dinners.</li>
+<li>Keep the grocery target around $100 when practical.</li>
+<li>Use “loved / pretty good / change X / don't make again” feedback to shape future weeks.</li>
+</ul>
+</div>
+</div>
+</section><section class="system-section" id="household">
+<h2>Joe &amp; Jenny Household Memory</h2>
+<p class="lead">Ratings and preferences stay on this device. Use them to record what you enjoyed, what you would change, and what you would make again.</p>
+<div class="grid grid2">
+<div class="card"><h3>Recipe feedback</h3><div id="recipeRatings"></div></div>
+<div class="card"><h3>Household rules</h3>
+<div class="preference-grid">
+<label><span>Budget priority</span><select id="prefBudget"><option value="balanced">Balanced</option><option value="budget">Budget-focused</option><option value="nutrition">Nutrition-focused</option></select></label>
+<label><span>Global flavor variety</span><select id="prefVariety"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label>
+<label><span>Leftover preference</span><select id="prefLeftovers"><option value="high">Use leftovers heavily</option><option value="medium">Moderate leftovers</option><option value="low">More fresh meals</option></select></label>
+<label><span>Specialty ingredients</span><select id="prefSpecialty"><option value="low">Keep limited</option><option value="medium">Some are fine</option><option value="high">Open to more</option></select></label>
+</div>
+<button onclick="saveHouseholdPrefs()" style="margin-top:12px" type="button">Save household settings</button><span class="small" id="prefStatus"></span>
+</div>
+</div>
+</section><section class="system-section" id="spending">
+<h2>Price &amp; Spending History</h2>
+<p class="lead">Week 8 introduced actual prices. This layer remembers them locally so you can compare estimates with what you really paid without putting household spending into the public API.</p>
+<div class="card">
+<div class="cart-kpis" id="spendingKpis"></div>
+<div class="system-actions">
+<button onclick="saveSpendingSnapshot()" type="button">Save this week's actuals</button>
+<button class="secondary" onclick="clearSpendingHistory()" type="button">Clear saved history</button>
+</div>
+<div id="spendingHistory" style="margin-top:14px"></div>
+</div>
+</section><div class="quick-links">
+<a class="quick-link" href="../groceries/index.html"><strong>🛒 Grocery Trip</strong><span class="small">Build the cart, check off purchases, record actual prices.</span></a>
+<a class="quick-link" href="../recipes/index.html"><strong>🍳 Recipes & Prep</strong><span class="small">Sunday prep, recipes, and leftover planning.</span></a>
+<a class="quick-link" href="../products/index.html"><strong>🧺 Products</strong><span class="small">Choose products and compare available alternatives.</span></a>
+<a class="quick-link" href="index.html"><strong>👫 Household</strong><span class="small">Ratings, preferences, notes, and spending history.</span></a>
+<a class="quick-link" href="../planner/index.html"><strong>📅 Next Week</strong><span class="small">Draft and save the next week's menu.</span></a>
+</div></main>
+<footer><div class="container">Joe & Jenny's Global Mediterranean Kitchen · Personal household state is stored locally unless explicitly sent to the shared Kitchen database.</div></footer>
+<script src="../js/kitchen.js"></script>
+</body></html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#426b52"><title>Joe & Jenny's Global Mediterranean Kitchen — Grocery Trip</title><link rel="stylesheet" href="../css/kitchen.css"></head>
+<body>
+<header class="app-hero"><div class="container"><div class="eyebrow">Joe & Jenny's Global Mediterranean Kitchen</div><h1>Grocery Trip</h1><div class="subtitle">Mediterranean nutrition as the foundation. Global flavors for variety. One practical grocery cart, one Sunday prep session, and meals that are actually cookable.</div><div class="badges"><span class="badge">2 people</span><span class="badge">~$100 target</span><span class="badge">Mobile friendly</span></div></div></header>
+<nav class="app-nav"><div class="container navscroll"><a href="../index.html">Home</a><a href="../weeks/week-1.html">Week 1</a><a href="index.html">Grocery</a><a href="../recipes/index.html">Recipes</a><a href="../products/index.html">Products</a><a href="../household/index.html">Household</a><a href="../planner/index.html">Next Week</a></div></nav>
+<main class="container page-main"><div class="breadcrumb">Kitchen 2.0 · Grocery</div><section id="grocery">
+<section id="cart-estimate">
+<h2>Weekly Cart Estimate</h2><p class="small">Package-aware estimate: the cart now distinguishes what the recipes need from how many retail packages you need to buy. Conversions are only used where the data supports them; unsupported unit conversions remain unverified.</p>
+<div class="card">
+<div id="cartStatus"><strong>Cart:</strong> calculating…</div>
+<div id="cartSummary" style="margin-top:12px"></div>
+<div id="cartItems" style="margin-top:14px"></div>
+<p class="small" style="margin-top:14px">Check “Already have it” for items in your pantry. Those items stay in the list but are excluded from the estimated shopping subtotal. Pantry selections are saved only on this device.</p>
+</div>
+</section>
+<h2>Grocery List</h2>
+<div class="card" id="shoppingTrip" style="margin:12px 0 20px">
+<h3 style="margin-top:0">Shopping Trip</h3>
+<p class="small">This is the actionable version of the weekly cart: buy the packages shown, check them off as you shop, and optionally record what you actually paid. These purchase checks and actual prices are saved only on this device.</p>
+<div id="shoppingTripSummary"></div>
+<div class="checklist" id="shoppingTripItems" style="margin-top:12px"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+<button onclick="clearShoppingTrip()" type="button">Clear purchased checks</button>
+</div>
+</div>
+<div class="card" id="selectedShopping" style="margin:12px 0 20px">
+<h3 style="margin-top:0">Your Selected Products</h3>
+<p class="small">Choices from Product Choices are carried into the shopping list on this device.</p>
+<div id="selectedShoppingItems"></div>
+<div class="choice-selected" id="selectedShoppingTotal" style="margin-top:12px"></div>
+</div>
+<p class="lead">Tap the boxes while shopping. Your checked items are saved in this browser on this device. “Used in” shows why each item is here.</p>
+<div class="grid grid2">
+<div class="card"><h3>Protein &amp; Dairy</h3><div class="checklist">
+<label class="check"><input data-g="" type="checkbox"/><span><b>Chicken</b> <span class="qty">2½–3 lb</span><br/><span class="used">Sun dinner, Mon lunch, Tue fajita bowls</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Frozen white fish</b> <span class="qty">~1½ lb</span><br/><span class="used">Fri miso-ginger fish</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Canned tuna</b> <span class="qty">3 cans</span><br/><span class="used">Wed pasta, Sat pitas</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Eggs</b> <span class="qty">1 dozen</span><br/><span class="used">Tue/Fri breakfasts</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Plain Greek yogurt</b> <span class="qty">32 oz</span><br/><span class="used">Breakfasts, snacks, bowls</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Feta</b> <span class="qty">6–8 oz</span><br/><span class="used">Chickpea bowls, pitas</span></span></label>
+</div></div>
+<div class="card"><h3>Beans &amp; Legumes</h3><div class="checklist">
+<label class="check"><input data-g="" type="checkbox"/><span><b>Chickpeas</b> <span class="qty">4 cans</span><br/><span class="used">Sun bowls, Thu curry, Sat Moroccan bowls, Sat pitas</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Black beans</b> <span class="qty">2 cans</span><br/><span class="used">Tue fajita bowls</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>White beans</b> <span class="qty">2 cans</span><br/><span class="used">Wed tuna pasta</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Dry red lentils</b> <span class="qty">1 lb</span><br/><span class="used">Mon dal</span></span></label>
+</div></div>
+<div class="card"><h3>Grains &amp; Bakery</h3><div class="checklist">
+<label class="check"><input data-g="" type="checkbox"/><span><b>Brown rice</b> <span class="qty">2 lb</span><br/><span class="used">Sun/Mon/Tue/Thu/Fri/Sat</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Whole-wheat pasta</b> <span class="qty">1 lb</span><br/><span class="used">Wed dinner/Thu lunch</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Old-fashioned oats</b><br/><span class="used">Breakfasts + overnight oats</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Whole-grain bread</b><br/><span class="used">Breakfast toast</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Whole-wheat pita</b><br/><span class="used">Sat lunch</span></span></label>
+</div></div>
+<div class="card"><h3>Produce</h3><div class="checklist">
+<label class="check"><input data-g="" type="checkbox"/><span><b>Bananas</b> <span class="qty">6–8</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Apples</b> <span class="qty">~8</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Carrots</b> <span class="qty">2 lb</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Cucumbers</b> <span class="qty">2</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Tomatoes</b> <span class="qty">~2 lb</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Baby spinach</b> <span class="qty">10–16 oz</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Onions</b> <span class="qty">3 lb</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Garlic</b> <span class="qty">1 bulb</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Lemons</b> <span class="qty">3</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Limes</b> <span class="qty">2</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Potatoes</b> <span class="qty">3 lb</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Bell peppers or inexpensive seasonal vegetables</b> <span class="qty">4–5</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Fresh ginger</b> <span class="qty">1 small piece</span></span></label>
+</div></div>
+<div class="card"><h3>Pantry / Flavor</h3><div class="checklist">
+<label class="check"><input data-g="" type="checkbox"/><span><b>Extra-virgin olive oil</b><br/><span class="used">Cooking + dressing</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Walnuts</b><br/><span class="used">Breakfasts</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Peanut butter</b><br/><span class="used">Snacks + optional curry thickener</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Soy sauce</b><br/><span class="used">Fri fish</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Miso</b> <span class="qty">small tub</span><br/><span class="used">Fri fish; skip if unavailable and use soy/ginger glaze</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Canned light coconut milk</b> <span class="qty">1 can</span><br/><span class="used">Thu curry; optional</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Honey</b><br/><span class="used">Fish glaze; optional</span></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Curry powder or garam masala</b></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Cumin, chili powder, paprika, cinnamon, oregano</b></span></label>
+<label class="check"><input data-g="" type="checkbox"/><span><b>Salt + black pepper</b></span></label>
+</div></div>
+</div>
+<div class="callout" style="margin-top:16px"><strong>Budget note:</strong> The ~$100 target assumes basic pantry staples such as olive oil, salt, pepper and common spices are already on hand. Specialty items like miso and coconut milk can push a first-week stock-up higher, but they are small purchases that can carry into future weeks. Store brands, frozen fish/vegetables, chicken thighs, and seasonal produce are all fair game.</div>
+</section><div class="quick-links">
+<a class="quick-link" href="index.html"><strong>🛒 Grocery Trip</strong><span class="small">Build the cart, check off purchases, record actual prices.</span></a>
+<a class="quick-link" href="../recipes/index.html"><strong>🍳 Recipes & Prep</strong><span class="small">Sunday prep, recipes, and leftover planning.</span></a>
+<a class="quick-link" href="../products/index.html"><strong>🧺 Products</strong><span class="small">Choose products and compare available alternatives.</span></a>
+<a class="quick-link" href="../household/index.html"><strong>👫 Household</strong><span class="small">Ratings, preferences, notes, and spending history.</span></a>
+<a class="quick-link" href="../planner/index.html"><strong>📅 Next Week</strong><span class="small">Draft and save the next week's menu.</span></a>
+</div></main>
+<footer><div class="container">Joe & Jenny's Global Mediterranean Kitchen · Personal household state is stored locally unless explicitly sent to the shared Kitchen database.</div></footer>
+<script src="../js/kitchen.js"></script>
+</body></html>
